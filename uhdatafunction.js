@@ -3,10 +3,14 @@
  * Created by MGY on 9/30/2015.
  */
 /* */
-/*global _*/
+/*global _, testdata*/
 /*exported addDegrees,totalDegrees, ishawaiian,hawaiianlegacy, totalhawaiianlegacy,percentagehawaiian*/
 /*exported makeyearfilter, dataforyear, totalDegreesbyYear, listCampus, groupByCampus, sumByCampus*/
  /*exported listCampusDegree, groupByYear, sumByYear, listyearlyDegree, isDoctoralDegree,doctoralList, doctoralDegreePrograms */
+
+var testdata = uhdata.slice(0,2).concat(_.find(uhdata, ishawaiian));
+
+
 /**
  * test data that takes porton of uhdataset
  * @type {string}
@@ -18,7 +22,19 @@
  * @returns : the calculated amount of Awards
  */
 function addDegrees(memo, record) {
+  if(isNaN(record["AWARDS"])){
+    throw new Error("Non-numeric AWARDS.");
+  }
   return memo + record['AWARDS'];
+}
+
+/**
+ * Returns true if the passed record has an AWARDS field
+ * @param record : The record
+ * @returns {boolean} : True if AWARDS field is present
+ */
+function hasAwards(record){
+  return record.hasOwnProperty("AWARDS");
 }
 /**
  * Function that is passed with UH data and returns the total amount of
@@ -27,6 +43,9 @@ function addDegrees(memo, record) {
  */
 
 function totalDegrees(data) {
+  if (!_.every(data, hasAwards)){
+    throw new Error("No AWARDS field.");
+  }
   return _.reduce(data, addDegrees, 0);
 
 }

@@ -1,58 +1,26 @@
-describe("Player", function() {
-  var player;
-  var song;
+/* global uhdata, testdata, totalDegrees, ishawaiian*/
 
-  beforeEach(function() {
-    player = new Player();
-    song = new Song();
+describe("Total Degrees", function() {
+var testdata = uhdata.slice(0,2).concat(_.find(uhdata, ishawaiian));
+
+  it("should compute the total number of awards for correctly specified sample data", function() {
+    expect(totalDegrees(testdata)).toEqual(403);
+
   });
 
-  it("should be able to play a Song", function() {
-    player.play(song);
-    expect(player.currentlyPlayingSong).toEqual(song);
+  var noAwardsField = testdata.concat({foo:"bar"});
 
-    //demonstrates use of custom matcher
-    expect(player).toBePlaying(song);
+  it("should throw an error when a record does not have the AWARDS field", function() {
+    expect(function(){totalDegrees(noAwardsField);}).toThrowError("No AWARDS field.");
+
   });
 
-  describe("when song has been paused", function() {
-    beforeEach(function() {
-      player.play(song);
-      player.pause();
-    });
+  var nonNumericAwards = testdata.concat({"AWARDS":"bar"});
 
-    it("should indicate that the song is currently paused", function() {
-      expect(player.isPlaying).toBeFalsy();
+  it("should throw an error when a record has a non Numeric awards field", function() {
+    expect(function(){totalDegrees(nonNumericAwards);}).toThrowError("Non-numeric AWARDS.");
 
-      // demonstrates use of 'not' with a custom matcher
-      expect(player).not.toBePlaying(song);
-    });
-
-    it("should be possible to resume", function() {
-      player.resume();
-      expect(player.isPlaying).toBeTruthy();
-      expect(player.currentlyPlayingSong).toEqual(song);
-    });
   });
 
-  // demonstrates use of spies to intercept and test method calls
-  it("tells the current song if the user has made it a favorite", function() {
-    spyOn(song, 'persistFavoriteStatus');
 
-    player.play(song);
-    player.makeFavorite();
-
-    expect(song.persistFavoriteStatus).toHaveBeenCalledWith(true);
-  });
-
-  //demonstrates use of expected exceptions
-  describe("#resume", function() {
-    it("should throw an exception if song is already playing", function() {
-      player.play(song);
-
-      expect(function() {
-        player.resume();
-      }).toThrowError("song is already playing");
-    });
-  });
 });
