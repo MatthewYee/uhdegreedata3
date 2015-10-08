@@ -5,7 +5,7 @@
 /* */
 /*global _*/
 /*exported addDegrees,totalDegrees, ishawaiian,hawaiianlegacy, totalhawaiianlegacy,percentagehawaiian*/
-/*exported makeyearfilter, dataforyear, totalDegreesbyYear, listCampus, groupByCampus, sumbyCampus*/
+/*exported makeyearfilter, dataforyear, totalDegreesbyYear, listCampus, groupByCampus, sumByCampus*/
  /*exported listCampusDegree, groupByYear, sumByYear, listyearlyDegree, isDoctoralDegree,doctoralList, doctoralDegreePrograms */
 /**
  * test data that takes porton of uhdataset
@@ -94,14 +94,6 @@ function dataforyear(data, year) {
 function totalDegreesbyYear(data, year) {
   return _.reduce(dataforyear(data, year), addDegrees, 0);
 }
-
-//console.log(totalDegreesbyYear(testdata,2010));
-//console.log(dataforyear(testdata,2011));
-
-// listCampus(data)
-// 1 extract the data campus we want with pluck
-// return the array of which firlet does
-// 2 remove duplicates using uniq
 /**
  * Predicate function that finds all the campuses name in the UH dataset with no duplicate
  * @param data : the UH dataset
@@ -124,7 +116,7 @@ function groupByCampus(data) {
  * @param key: The campus
  * @returns : The Campus and their total amount of awards given
  */
-function sumbyCampus(val) {
+function sumByCampus(val) {
   return _.reduce(val, addDegrees, 0);
 }
 /**
@@ -133,7 +125,7 @@ function sumbyCampus(val) {
  * @returns : object with campus name and total awards given
  */
 function listCampusDegree(data) {
-  return _.mapObject(groupByCampus(data), sumbyCampus);
+  return _.mapObject(groupByCampus(data), sumByCampus);
 }
 /**
  * Group the dataset by Year
